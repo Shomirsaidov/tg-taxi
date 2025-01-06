@@ -43,9 +43,6 @@
 
 
 import axios from 'axios';
-const axiosInstance = axios.create({
-  baseURL: "/api",
-});    
 
 
 export default {
@@ -67,7 +64,7 @@ export default {
       this.debounceTimer = setTimeout(async () => {
         console.log('fetching hints...');
         try {
-          const response = await axiosInstance.post(`/get-addresses`, {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}get-addresses`, {
             query: this.inpValue,
             country: "Россия",
             city: "Москва",
@@ -83,7 +80,7 @@ export default {
 
         if(this.$store.state.chooseMode == 'start') {
 
-            const response = await axiosInstance.post(`/get-place-details`, {
+            const response = await axios.post(`${process.env.VUE_APP_API_URL}get-place-details`, {
                 place_id: p.place_id,
                 lang_code: "ru"
             })
@@ -96,7 +93,7 @@ export default {
 
 
         } else {
-            const response = await axiosInstance.post(`/get-place-details`, {
+            const response = await axios.post(`${process.env.VUE_APP_API_URL}get-place-details`, {
                 place_id: p.place_id,
                 lang_code: "ru"
             })
