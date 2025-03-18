@@ -47,6 +47,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/RulesView.vue')
   },
   {
+    path: '/repeat',
+    name: 'repeatOrder',
+    component: () => import(/* webpackChunkName: "about" */ '../views/RepeatView.vue')
+  },
+  {
+    path: '/test-order',
+    name: 'testOrder',
+    component: () => import(/* webpackChunkName: "about" */ '../views/TestView.vue')
+  },
+  {
     path: '/ios',
     name: 'apps',
     component: () => import(/* webpackChunkName: "about" */ '../views/AppsView.vue')

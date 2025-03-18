@@ -14,7 +14,7 @@
             <div>
 
                 <div v-if="addresses.length == 0" class="flex items-center justify-center ">
-                    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-e-4 border-blue-500"></div>
                 </div>
 
                 <div v-for="address in addresses" 
@@ -64,11 +64,10 @@ export default {
       this.debounceTimer = setTimeout(async () => {
         console.log('fetching hints...');
         try {
-          const response = await axios.post(`${process.env.VUE_APP_API_URL}get-addresses`, {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/get-addresses/`, {
             query: this.inpValue,
-            country: "Россия",
-            city: "Москва",
-            lang_code: "ru"
+            tg_id: this.$route.query.tg_id
+            
         });
           this.addresses = response.data.addresses;
         } catch (error) {
@@ -80,7 +79,7 @@ export default {
 
         if(this.$store.state.chooseMode == 'start') {
 
-            const response = await axios.post(`${process.env.VUE_APP_API_URL}get-place-details`, {
+            const response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
                 place_id: p.place_id,
                 lang_code: "ru"
             })
@@ -93,7 +92,7 @@ export default {
 
 
         } else {
-            const response = await axios.post(`${process.env.VUE_APP_API_URL}get-place-details`, {
+            const response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
                 place_id: p.place_id,
                 lang_code: "ru"
             })
@@ -103,9 +102,26 @@ export default {
 
             this.$store.state.endPoint = a
             console.log(this.$store.state.endPoint);
+
+            await this.calcDetails();
         }
 
         this.$store.state.modalOn = false
+    },
+    async calcDetails() {
+      console.log('getting details...')
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/pre-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from: this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+               
+            })
+
+
+      console.log(response.data);
+      this.$store.state.routeInfo = response.data
+
     }
   },
 };

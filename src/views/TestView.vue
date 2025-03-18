@@ -14,6 +14,10 @@
 
 
 
+    <div class="p-3 bg-white text-center font-semibold border-b">
+      Тестовый заказ
+    </div>
+
     <!-- Map Section -->
     <div v-if="!this.$store.state.modalOn && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map" >
 

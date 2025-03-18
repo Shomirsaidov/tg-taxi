@@ -260,7 +260,7 @@ import { LMap, LTileLayer, LMarker, LPopup,LPolyline } from "vue3-leaflet";
 import axios from "axios";
 
 export default {
-  name: "TaxiOrderComponent",
+  name: "TaxiOrderRepeatComponent",
   components: {
     LMap,
     LTileLayer,
@@ -344,14 +344,10 @@ export default {
       },
       immediate: true // Optional: Trigger the handler immediately with the current value
     },
-    'selectedPaymentOpts': {
-      handler(newValue, oldValue) {
-        console.log(`payment changed from ${oldValue} to ${newValue}`);
-        // this.triggerAction(newValue);
-      },
-    }
+    
   },
   methods: {
+
     showPayOptions() {
       $('.payment_options').slideToggle();
     },
@@ -388,12 +384,7 @@ export default {
         this.infoModal = true;
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
-        this.$store.state.startPoint = {
-          title: response.data.city, 
-          lat: response.data.latitude,
-          lon: response.data.longitude,
-
-        };
+        
 
         this.transportOptions[0].label = this.$store.state.langLoaded.transport_taxi;
         this.transportOptions[1].label = this.$store.state.langLoaded.transport_private;
@@ -401,12 +392,35 @@ export default {
         this.transportOptions[3].label = this.$store.state.langLoaded.transport_all;
 
         console.log(this.$store.state.langLoaded)
+
+        this.calcDetails();
+
       }
 
 
     },
     isSelected(index) {
       return this.selectedOptions.includes(index);
+    },
+    async calcDetails() {
+
+
+      console.log('getting details...')
+      console.log(this.$store.state.startPoint);
+
+
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/pre-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from: this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+               
+            })
+
+
+      console.log(response.data);
+      this.$store.state.routeInfo = response.data
+
     },
     async createOrder() {
 
